@@ -96,16 +96,17 @@ int main() {
     }
 
     // Executa o algoritmo de Dijkstra a partir do palácio real (considerado como vértice de origem)
-    int A1;
-    dijkstra(&grafo, grafo.vertices[1], A1);
+    int A1, A2;
+    dijkstra(&grafo, grafo.vertices[1], A1, A2);
 
     // Impressão das distâncias mínimas para cada vila
     for (int i = 1; i <= N; ++i) {
         cout << (grafo.vertices[i]->distancia == INF ? -1 : grafo.vertices[i]->distancia) << endl;
     }
 
-    // Impressão do valor de A1
+    // Impressão dos valores de A1 e A2
     cout << A1 << endl;
+    cout << A2 << endl;
 
     // Limpeza de memória
     for (int i = 1; i <= N; ++i) {
@@ -114,3 +115,4 @@ int main() {
 
     return 0;
 }
+
