@@ -19,10 +19,15 @@ struct Grafo {
 };
 
 struct Aresta {
-    Vertice* origem;
-    Vertice* destino;
+    int origem;
+    int destino;
     int peso;
     int ano;
+    int custo;
+
+    bool operator<(const Aresta& outra) const {
+        return custo < outra.custo;
+    }
 };
 
 void dijkstra(Grafo* grafo, Vertice* origem, int& A1) {
