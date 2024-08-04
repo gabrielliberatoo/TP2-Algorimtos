@@ -56,9 +56,10 @@ void dijkstra(Grafo* grafo, Vertice* origem, int& A1) {
         if (distanciaAtual > vertice->distancia) continue;
 
         // Para cada vizinho do vértice, atualiza a distância e o ano se for menor
-        for (const auto& [vizinho, info] : vertice->vizinhos) {
-            int peso = info.first;
-            int ano = info.second;
+        for (const auto& vizinho_info : vertice->vizinhos) {
+            Vertice* vizinho = vizinho_info.first;
+            int peso = vizinho_info.second.first;
+            int ano = vizinho_info.second.second;
             int novaDistancia = vertice->distancia + peso;
 
             if (novaDistancia < vizinho->distancia) {
@@ -83,8 +84,9 @@ bool todasAcessiveis(Grafo* grafo, int anoLimite) {
         Vertice* vertice = fila.front();
         fila.pop();
 
-        for (const auto& [vizinho, info] : vertice->vizinhos) {
-            int ano = info.second;
+        for (const auto& vizinho_info : vertice->vizinhos) {
+            Vertice* vizinho = vizinho_info.first;
+            int ano = vizinho_info.second.second;
             if (!visitado[vizinho->id] && ano <= anoLimite) {
                 visitado[vizinho->id] = true;
                 fila.push(vizinho);
@@ -109,7 +111,6 @@ int determinarAno(Grafo* grafo, int maxAno){
     }
     return resultado;
 }
-
 
 int find(vector<int>& pai, int i){
     if (pai[i] != i){
@@ -157,7 +158,6 @@ int kruskal(vector<Aresta>& arestas, int N){
     return custoTotal;
 }
 
-
 int main() {
     int N, M;
     cin >> N >> M;
@@ -183,7 +183,7 @@ int main() {
         grafo.vertices[u]->vizinhos.push_back({grafo.vertices[v], {l, a}});
         grafo.vertices[v]->vizinhos.push_back({grafo.vertices[u], {l, a}});
 
-        arestas.push_back({u, v, l, a, c});
+        arestas.push_back({u, v, l, a, c}); // Adiciona aresta à lista de arestas para Kruskal
     }
 
     // Executa o algoritmo de Dijkstra a partir do palácio real (considerado como vértice de origem)
