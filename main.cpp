@@ -18,7 +18,7 @@ struct Grafo {
     vector<Vertice*> vertices;
 };
 
-void dijkstra(Grafo* grafo, Vertice* origem, int& A1) {
+void dijkstra(Grafo* grafo, Vertice* origem, int& A1, int& A2) {
     // Inicializa a distância de todos os vértices como infinito
     for (int i = 0; i < grafo->vertices.size(); i++) {
         if (grafo->vertices[i]) {
@@ -28,10 +28,15 @@ void dijkstra(Grafo* grafo, Vertice* origem, int& A1) {
 
     origem->distancia = 0;
     A1 = 0;
+    A2 = -1; // Inicializa A2 como -1
 
     // Fila de prioridade para armazenar os vértices a serem visitados
     priority_queue<pair<int, Vertice*>, vector<pair<int, Vertice*>>, greater<pair<int, Vertice*>>> fila;
     fila.push(make_pair(0, origem));
+
+    // Vetor para verificar a conectividade
+    vector<bool> alcançado(grafo->vertices.size(), false);
+    alcançado[origem->id] = true;
 
     // Loop para visitar todos os vértices
     while (!fila.empty()) {
@@ -53,8 +58,19 @@ void dijkstra(Grafo* grafo, Vertice* origem, int& A1) {
                 A1 = max(A1, ano); // Atualiza A1 com o maior ano encontrado até agora
                 fila.push(make_pair(novaDistancia, vizinho));
             }
+            // Marca o vizinho como alcançado
+            alcançado[vizinho->id] = true;
         }
     }
+
+    // Determina o ano A2, onde todos os vértices foram alcançados
+    for (int i = 1; i < alcançado.size(); ++i) {
+        if (!alcançado[i]) {
+            A2 = -1; // Se algum vértice não foi alcançado
+            return;
+        }
+    }
+    A2 = A1; // Se todos os vértices foram alcançados, A2 é o mesmo que A1
 }
 
 int main() {
