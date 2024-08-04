@@ -89,7 +89,7 @@ int main() {
     }
 
     // Impressão do valor de A1
-    cout << "A1: " << A1 << endl;
+    cout << A1 << endl;
 
     // Limpeza de memória
     for (int i = 1; i <= N; ++i) {
