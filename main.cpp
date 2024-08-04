@@ -88,6 +88,21 @@ bool todasAcessiveis(Grafo* grafo, int anoLimite) {
     }
 }
 
+int determinarAno(Grafo* grafo, int maxAno){
+    int esquerdo = 1, direito = maxAno, resultado = maxAno;
+    
+    while(esquerdo<=direito){
+        int meio = (esquerdo+direito)/2;
+        if(todasAcessiveis(grafo, meio)){
+            resultado = meio;
+            direito = meio-1;
+    } else {
+        esquerdo = meio+1;
+    }
+    return resultado;
+    }
+}
+
 int main() {
     int N, M;
     cin >> N >> M;
