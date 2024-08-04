@@ -86,6 +86,7 @@ bool todasAcessiveis(Grafo* grafo, int anoLimite) {
             }
         }
     }
+    return visitados == grafo->vertices.size() - 1;
 }
 
 int determinarAno(Grafo* grafo, int maxAno){
@@ -99,8 +100,8 @@ int determinarAno(Grafo* grafo, int maxAno){
     } else {
         esquerdo = meio+1;
     }
-    return resultado;
     }
+    return resultado;
 }
 
 int main() {
@@ -109,6 +110,8 @@ int main() {
 
     Grafo grafo;
     grafo.vertices.resize(N + 1); // O +1 é para lidar com o índice 1-based
+
+    int maxAno = 0;
 
     // Inicialização dos vértices
     for (int i = 1; i <= N; ++i) {
@@ -120,6 +123,7 @@ int main() {
     for (int i = 0; i < M; ++i) {
         int u, v, a, l, c;
         cin >> u >> v >> a >> l >> c;
+        maxAno = max(maxAno, a);
 
         grafo.vertices[u]->vizinhos.push_back({grafo.vertices[v], {l, a}});
         grafo.vertices[v]->vizinhos.push_back({grafo.vertices[u], {l, a}});
@@ -129,13 +133,17 @@ int main() {
     int A1;
     dijkstra(&grafo, grafo.vertices[1], A1);
 
+    // Calcula o valor de A2
+    int A2 = determinarAno(&grafo, maxAno);
+
     // Impressão das distâncias mínimas para cada vila
     for (int i = 1; i <= N; ++i) {
         cout << (grafo.vertices[i]->distancia == INF ? -1 : grafo.vertices[i]->distancia) << endl;
     }
 
-    // Impressão do valor de A1
+    // Impressão dos valores de A1 e A2
     cout << A1 << endl;
+    cout << A2 << endl;
 
     // Limpeza de memória
     for (int i = 1; i <= N; ++i) {
