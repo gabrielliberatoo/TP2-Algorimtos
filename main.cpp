@@ -18,6 +18,13 @@ struct Grafo {
     vector<Vertice*> vertices;
 };
 
+struct Aresta {
+    Vertice* origem;
+    Vertice* destino;
+    int peso;
+    int ano;
+};
+
 void dijkstra(Grafo* grafo, Vertice* origem, int& A1) {
     // Inicializa a distância de todos os vértices como infinito
     for (int i = 0; i < grafo->vertices.size(); i++) {
@@ -52,6 +59,30 @@ void dijkstra(Grafo* grafo, Vertice* origem, int& A1) {
                 vizinho->distancia = novaDistancia;
                 A1 = max(A1, ano); // Atualiza A1 com o maior ano encontrado até agora
                 fila.push(make_pair(novaDistancia, vizinho));
+            }
+        }
+    }
+}
+
+// Função para verificar se todas as vilas são acessíveis a partir do palácio real até um determinado ano
+bool todasAcessiveis(Grafo* grafo, int anoLimite) {
+    vector<bool> visitado(grafo->vertices.size(), false);
+    queue<Vertice*> fila;
+
+    fila.push(grafo->vertices[1]);
+    visitado[1] = true;
+    int visitados = 1;
+
+    while (!fila.empty()) {
+        Vertice* vertice = fila.front();
+        fila.pop();
+
+        for (const auto& [vizinho, info] : vertice->vizinhos) {
+            int ano = info.second;
+            if (!visitado[vizinho->id] && ano <= anoLimite) {
+                visitado[vizinho->id] = true;
+                fila.push(vizinho);
+                visitados++;
             }
         }
     }
