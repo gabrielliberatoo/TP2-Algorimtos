@@ -109,6 +109,14 @@ int determinarAno(Grafo* grafo, int maxAno){
     return resultado;
 }
 
+
+int find(vector<int>& pai, int i){
+    if (pai[i] != i){
+        pai[i] = find(pai, pai[i]);
+    }
+    return pai[i];
+}
+
 int main() {
     int N, M;
     cin >> N >> M;
