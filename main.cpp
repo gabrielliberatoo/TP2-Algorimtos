@@ -166,6 +166,7 @@ int main() {
     grafo.vertices.resize(N + 1); // O +1 é para lidar com o índice 1-based
 
     int maxAno = 0;
+    vector<Aresta> arestas;
 
     // Inicialização dos vértices
     for (int i = 1; i <= N; ++i) {
@@ -181,6 +182,8 @@ int main() {
 
         grafo.vertices[u]->vizinhos.push_back({grafo.vertices[v], {l, a}});
         grafo.vertices[v]->vizinhos.push_back({grafo.vertices[u], {l, a}});
+
+        arestas.push_back({u, v, l, a, c});
     }
 
     // Executa o algoritmo de Dijkstra a partir do palácio real (considerado como vértice de origem)
@@ -190,6 +193,9 @@ int main() {
     // Calcula o valor de A2
     int A2 = determinarAno(&grafo, maxAno);
 
+    //calcular arvore geradora minima
+    int menorCusto = kruskal(arestas, N);
+
     // Impressão das distâncias mínimas para cada vila
     for (int i = 1; i <= N; ++i) {
         cout << (grafo.vertices[i]->distancia == INF ? -1 : grafo.vertices[i]->distancia) << endl;
@@ -198,6 +204,7 @@ int main() {
     // Impressão dos valores de A1 e A2
     cout << A1 << endl;
     cout << A2 << endl;
+    cout << menorCusto << endl;
 
     // Limpeza de memória
     for (int i = 1; i <= N; ++i) {
