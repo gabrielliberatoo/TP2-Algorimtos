@@ -2,6 +2,7 @@
 #include <vector>
 #include <queue>
 #include <limits>
+#include <algorithm>
 
 using namespace std;
 const int INF = numeric_limits<int>::max();
@@ -132,6 +133,28 @@ void unionSets(vector<int>& pai, vector<int>& rank, int x, int y){
         }
         
     }
+}
+
+int kruskal(vector<Aresta>& arestas, int N){
+    sort(arestas.begin(), arestas.end());
+
+    vector<int> pai(N+1);
+    vector<int> rank(N+1, 0);
+    for(int i = 1; i <= N; i++){
+        pai[i] = i;
+    }
+
+    int custoTotal = 0;
+    for (const auto& aresta : arestas){
+        int raizU = find(pai, aresta.origem);
+        int raizV = find(pai, aresta.destino);
+        
+        if(raizU != raizV){
+            custoTotal += aresta.custo;
+            unionSets(pai, rank, raizU, raizV);
+        }
+    }
+    return custoTotal;
 }
 
 
