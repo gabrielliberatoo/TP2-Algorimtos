@@ -115,7 +115,25 @@ int find(vector<int>& pai, int i){
         pai[i] = find(pai, pai[i]);
     }
     return pai[i];
+} 
+
+void unionSets(vector<int>& pai, vector<int>& rank, int x, int y){
+    int raizX = find(pai, x);
+    int raizY = find(pai, y);
+
+    if(raizX != raizY){
+        if(rank[raizX] > rank[raizY]){
+            pai[raizY] = raizX;
+        } else if (rank[raizX] < rank[raizY]){
+            pai[raizX] = raizY;
+        } else {
+            pai[raizY] = raizX;
+            rank[raizX]++;
+        }
+        
+    }
 }
+
 
 int main() {
     int N, M;
