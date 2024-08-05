@@ -9,9 +9,7 @@ const int INF = numeric_limits<int>::max();
 
 struct Vertice {
     int id;
-    int ano;
     int distancia;
-    int custo;
     vector<pair<Vertice*, pair<int, int>>> vizinhos; // (vizinho, (peso, ano))
 };
 
@@ -31,7 +29,7 @@ struct Aresta {
     }
 };
 
-void dijkstra(Grafo* grafo, Vertice* origem, int& A1) {
+void dijkstra(Grafo* grafo, Vertice* origem) {
     // Inicializa a distância de todos os vértices como infinito
     for (int i = 0; i < grafo->vertices.size(); i++) {
         if (grafo->vertices[i]) {
@@ -40,7 +38,6 @@ void dijkstra(Grafo* grafo, Vertice* origem, int& A1) {
     }
 
     origem->distancia = 0;
-    A1 = 0;
 
     // Fila de prioridade para armazenar os vértices a serem visitados
     priority_queue<pair<int, Vertice*>, vector<pair<int, Vertice*>>, greater<pair<int, Vertice*>>> fila;
@@ -55,16 +52,14 @@ void dijkstra(Grafo* grafo, Vertice* origem, int& A1) {
         // Se a distância atual for maior que a distância do vértice, então não é necessário visitar
         if (distanciaAtual > vertice->distancia) continue;
 
-        // Para cada vizinho do vértice, atualiza a distância e o ano se for menor
+        // Para cada vizinho do vértice, atualiza a distância se for menor
         for (const auto& vizinho_info : vertice->vizinhos) {
             Vertice* vizinho = vizinho_info.first;
             int peso = vizinho_info.second.first;
-            int ano = vizinho_info.second.second;
             int novaDistancia = vertice->distancia + peso;
 
             if (novaDistancia < vizinho->distancia) {
                 vizinho->distancia = novaDistancia;
-                A1 = max(A1, ano); // Atualiza A1 com o maior ano encontrado até agora
                 fila.push(make_pair(novaDistancia, vizinho));
             }
         }
@@ -100,14 +95,14 @@ bool todasAcessiveis(Grafo* grafo, int anoLimite) {
 int determinarAno(Grafo* grafo, int maxAno){
     int esquerdo = 1, direito = maxAno, resultado = maxAno;
     
-    while(esquerdo<=direito){
-        int meio = (esquerdo+direito)/2;
+    while(esquerdo <= direito){
+        int meio = (esquerdo + direito) / 2;
         if(todasAcessiveis(grafo, meio)){
             resultado = meio;
-            direito = meio-1;
-    } else {
-        esquerdo = meio+1;
-    }
+            direito = meio - 1;
+        } else {
+            esquerdo = meio + 1;
+        }
     }
     return resultado;
 }
@@ -139,8 +134,8 @@ void unionSets(vector<int>& pai, vector<int>& rank, int x, int y){
 int kruskal(vector<Aresta>& arestas, int N){
     sort(arestas.begin(), arestas.end());
 
-    vector<int> pai(N+1);
-    vector<int> rank(N+1, 0);
+    vector<int> pai(N + 1);
+    vector<int> rank(N + 1, 0);
     for(int i = 1; i <= N; i++){
         pai[i] = i;
     }
@@ -187,13 +182,22 @@ int main() {
     }
 
     // Executa o algoritmo de Dijkstra a partir do palácio real (considerado como vértice de origem)
-    int A1;
-    dijkstra(&grafo, grafo.vertices[1], A1);
+    dijkstra(&grafo, grafo.vertices[1]);
+
+    // Calcula o valor de A1 percorrendo as distâncias finais
+    int A1 = 0;
+    for (int i = 1; i <= N; ++i) {
+        for (const auto& vizinho_info : grafo.vertices[i]->vizinhos) {
+            if (vizinho_info.first->distancia == grafo.vertices[i]->distancia + vizinho_info.second.first) {
+                A1 = max(A1, vizinho_info.second.second);
+            }
+        }
+    }
 
     // Calcula o valor de A2
     int A2 = determinarAno(&grafo, maxAno);
 
-    //calcular arvore geradora minima
+    // Calcular a árvore geradora mínima
     int menorCusto = kruskal(arestas, N);
 
     // Impressão das distâncias mínimas para cada vila
